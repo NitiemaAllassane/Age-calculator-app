@@ -1,0 +1,127 @@
+/* ==========================================================================
+   RESET CSS MODERNE - Modern CSS Reset
+   ========================================================================== */
+
+
+
+/* 1. Supprimer marges/paddings par défaut + boîte bien dimensionnée
+   Remove default spacing + use border-box for consistent sizing */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+/* 2. Empêcher le zoom automatique sur mobile (iOS notamment)
+   Prevent automatic text resizing on mobile browsers */
+
+html {
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+
+
+/* 3. Corps de la page avec hauteur minimale, ligne confortable
+   Base body settings: min height and readable line spacing */
+
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+
+/* 4. Supprimer marges verticales de fin pour plusieurs éléments
+   Remove bottom margin spacing from common elements */
+
+body,
+h1, h2, h3, h4, h5, h6,
+p, figure, blockquote, dl, dd {
+  margin-block-end: 0;
+}
+
+
+/* 5. Meilleur équilibrage du texte dans les titres
+   Better headline balance on multiple lines */
+
+h1, h2, h3, h4 {
+  text-wrap: balance;
+  color: red;
+}
+
+/* 6. Harmoniser l'interlignage entre titres et éléments de formulaire
+   Consistent line height for headers and form elements */
+
+h1, h2, h3, h4,
+input, label, button {
+  line-height: 1.1;
+}
+
+/* 7. Hériter de la police et de la taille pour les champs de formulaire
+   Inherit font and size in form controls */
+
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* 8. Zone de texte sans attribut rows : hauteur minimale par défaut
+   Textarea default height if rows not set */
+
+textarea:not([rows]) {
+  min-height: 10em;
+}
+
+
+/* 9. Lien sans classe : garde la couleur du texte + meilleure lisibilité
+   Unclassed links: inherit color, auto underline skip */
+
+a:not([class]) {
+  color: currentColor;
+  text-decoration-skip-ink: auto;
+}
+
+/* 10. Forcer le retour à la ligne pour textes longs
+   Force word breaking on long content */
+
+p,
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* 11. Belle gestion des paragraphes (typo moderne)
+  Nicer paragraph wrapping behavior */
+
+p {
+  text-wrap: pretty;
+}
+
+
+/* 12. Éléments visuels (images, vidéos...) responsives par défaut
+   Media elements: responsive by default */
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+
+/* 13. Gestion douce des ancres (scroll vers un élément ciblé)
+   Smooth offset when scrolling to anchors */
+
+:target {
+  scroll-margin-block: 5ex;
+}
