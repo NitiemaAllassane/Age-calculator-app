@@ -1,5 +1,145 @@
 <script>
-    
+    let userDay = $state("");
+    let userMonth = $state("");
+    let userYear = $state("");
+
+    let isDayError = $state(false);
+    let dayErrorMessage = $state("");
+
+    let isMonthError = $state(false);
+    let monthErrorMessage = $state("");
+
+    let isYearError = $state(false);
+    let yearErrorMessage = $state("");
+
+    let dayResult = $state();
+    let monthResult = $state();
+    let yearResult = $state();
+
+
+
+    function validateField(name, value, min, max) {
+        if (!value) {
+            return { error: true, message: "This field is required" };
+        }
+
+        const num = parseInt(value);
+        if (isNaN(num) || num < min || num > max) {
+            return { error: true, message: `Must be a valid ${name}` };
+        }
+
+        return { error: false, message: "" };
+    }
+
+
+    function isValidDate(d, m, y) {
+        const date = new Date(`${y}-${m}-${d}`);
+        return (
+            date.getFullYear() === y &&
+            date.getMonth() + 1 === m &&
+            date.getDate() === d
+        );
+    }
+
+
+
+    // Handle form
+    function handleFormSubmission(event) {
+        event.preventDefault();
+
+        isDayError = false;
+        isMonthError = false;
+        isYearError = false;
+        dayErrorMessage = "";
+        monthErrorMessage = "";
+        yearErrorMessage = "";
+
+
+        function validateAllFields() {
+            const validations = [
+                {
+                    name: "day",
+                    value: userDay,
+                    min: 1,
+                    max: 31,
+                    setError: (err, msg) => {
+                        isDayError = err;
+                        dayErrorMessage = msg;
+                    }
+                },
+                {
+                    name: "month",
+                    value: userMonth,
+                    min: 1,
+                    max: 12,
+                    setError: (err, msg) => {
+                        isMonthError = err;
+                        monthErrorMessage = msg;
+                    }
+                },
+                {
+                    name: "year",
+                    value: userYear,
+                    min: 1000,
+                    max: new Date().getFullYear(),
+                    setError: (err, msg) => {
+                        isYearError = err;
+                        yearErrorMessage = msg;
+                    }
+                }
+            ];
+
+            let hasError = false;
+
+            validations.forEach(({ name, value, min, max, setError }) => {
+                const { error, message } = validateField(name, value, min, max);
+                setError(error, message);
+                if (error) hasError = true;
+            });
+
+            return !hasError;
+        }
+
+
+
+        const isValid = validateAllFields();
+        if (!isValid) return;
+
+
+        const day = parseInt(userDay);
+        const month = parseInt(userMonth);
+        const year = parseInt(userYear);
+        const now = new Date();
+
+        const birthDate = new Date(year, month - 1, day);
+        const today = new Date();
+
+        if (isNaN(birthDate.getTime()) || birthDate > today) {
+            isDayError = true;
+            dayErrorMessage = "Invalid date";
+            return;
+        }
+
+        // Calcul d’âge
+        let ageYear = today.getFullYear() - birthDate.getFullYear();
+        let ageMonth = today.getMonth() - birthDate.getMonth();
+        let ageDay = today.getDate() - birthDate.getDate();
+
+        if (ageDay < 0) {
+            ageMonth -= 1;
+            const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+            ageDay += prevMonth.getDate();
+        }
+
+        if (ageMonth < 0) {
+            ageYear -= 1;
+            ageMonth += 12;
+        }
+
+        yearResult = ageYear;
+        monthResult = ageMonth;
+        dayResult = ageDay;
+    }
     
 </script>
 
@@ -7,27 +147,27 @@
 
 <main>
     <section class="calculator">
-        <form>
+        <form onsubmit={handleFormSubmission}>
             <div class="inputs">
                 <div class="period day">
-                    <label for="day" class="">DAY</label>
-                    <input type="number" name="day" id="day" placeholder="DD" class="">
+                    <label for="day" class={{errorLab: isDayError}}>DAY</label>
+                    <input type="number" name="day" id="day" placeholder="DD"  bind:value={userDay} class={{errorState: isDayError}} min="1" max="31" >
                     <div class="errorbox">
-                        <p class="error day-error"></p>
+                        <p class="error day-error">{dayErrorMessage}</p>
                     </div>
                 </div>
                 <div class="period month">
-                    <label for="month">MONTH</label>
-                    <input type="number" name="month" id="month" placeholder="MM" class="">
+                    <label for="month" class={{errorLab: isMonthError}}>MONTH</label>
+                    <input type="number" name="month" id="month" placeholder="MM" bind:value={userMonth} class={{errorState: isMonthError}} min="1" max="12">
                     <div class="errorbox">
-                        <p class="error month-error"></p>
+                        <p class="error month-error">{monthErrorMessage}</p>
                     </div>
                 </div>
                 <div class="period year">
-                    <label for="year">YEAR</label>
-                    <input type="number" name="year" id="year" placeholder="YYYY" class="">
+                    <label for="year" class={{errorLab: isYearError}}>YEAR</label>
+                    <input type="number" name="year" id="year" placeholder="YYYY" bind:value={userYear} class={{errorState: isYearError}}>
                     <div class="errorbox">
-                        <p class="error year-error"></p>
+                        <p class="error year-error">{yearErrorMessage}</p>
                     </div>
                 </div>
             </div>
@@ -41,15 +181,15 @@
 
         <article class="age-results">
             <h1>
-                <span>- -</span>
+                <span>{!yearResult ? "- -" : yearResult}</span>
                 YEARS
             </h1>
             <h1>
-                <span>- -</span>
+                <span>{!monthResult ? "- -" : monthResult}</span>
                 MONTHS
             </h1>
             <h1>
-                <span>- -</span>
+                <span>{!dayResult ? "- -" : dayResult}</span>
                 DAYS
             </h1>
         </article>
@@ -72,7 +212,7 @@
     } */
 
     .calculator {
-        width: 750px;
+        width: 850px;
         background-color: var(--white);
         padding: 2em;
         border-radius: 20px 20px 140px 20px;
@@ -92,7 +232,7 @@
         color: var(--grey-500);
     }
 
-    label.error-lab {
+    label.errorLab {
         color: var(--red-400);
         font-weight: var(--weight-md);
     }
@@ -113,7 +253,7 @@
         border-color: var(--purple-500);
     }
 
-    input.error-state {
+    input.errorState {
         border: 2px solid var(--red-400);
     }
 
@@ -181,7 +321,10 @@
     }
 
     @media screen and (max-width: 48rem) {
-        .calculator {max-width: 90%;}
+        .calculator {
+            max-width: 90%;
+            padding: 1em;
+        }
     }
 
     @media screen and (max-width: 40rem) {
