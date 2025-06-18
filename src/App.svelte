@@ -1,6 +1,6 @@
 <script>
 
-    let iconArrowImg = "/assets/images/icon-arrow.svg";
+    let iconArrowImg = "/src/assets/images/icon-arrow.svg";
 
     let userDay = $state("");
     let userMonth = $state("");
