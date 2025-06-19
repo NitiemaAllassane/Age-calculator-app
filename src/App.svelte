@@ -1,6 +1,6 @@
 <script>
 
-    let src = "/assets/images/icon-arrow.svg";
+    import iconImage from '../assets/images/icon-arrow.svg';
 
 
     let userDay = $state("");
@@ -178,7 +178,7 @@
             <div class="submit-section">
                 <span class="line"></span>
                 <button class="calculateBtn" aria-label="Calculate your age">
-                    <img { src } alt="" aria-hidden="true">
+                    <img src={iconImage} alt="" aria-hidden="true">
                 </button>
             </div>
         </form>
